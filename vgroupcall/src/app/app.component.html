@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	<a class="navbar-brand" href="#">Connect : Rendezvous</a>
+</nav>
+
+<div id="main-container" class="container">
+	<div *ngIf="!session" id="join">
+		<div id="join-dialog" class="card">
+			<div class="card-body">
+			<h4 class="card-title">Join a video session</h4>
+			<form (submit)="joinSession()">
+				<div class="form-group">
+					<label for="userName">Participant</label>
+					<input class="form-control" type="text" id="userName" name="userName" [(ngModel)]="userName" required>
+				</div>
+				<div class="form-group">
+					<label for="sessionId">Session</label>
+					<input class="form-control" type="text" id="sessionId" name="sessionId" [(ngModel)]="sessionId" required>
+				</div>
+				<button class="btn btn-primary active" type="submit" name="commit" value="Join!">Join!</button>
+			</form>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="session" id="session">
+		<div class="row">
+			<div class="col-md-12">
+				<div id="session-header">
+					<h4 id="session-title">{{sessionId}}</h4>
+					<input class="btn btn-danger active" type="button" id="buttonLeaveSession" (click)="leaveSession()" value="Leave session">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div *ngIf="this.mainVideoStream" id="main-video" class="col-md-10">
+				<stream-component [stream]="this.mainVideoStream" [isMuted]="true"></stream-component>
+			</div>
+			<div id="video-container" class="col-md-2">
+				<div class="row">
+				<div *ngIf="this.localStream" class="stream-container col-md-12">
+					<stream-component [stream]="this.localStream" [isMuted]="true" (mainVideoStream)="getMainVideoStream($event)"></stream-component>
+				</div>
+				<div *ngFor="let s of this.remoteStreams" class="stream-container col-md-12">
+					<stream-component [stream]="s" [isMuted]="false" (mainVideoStream)="getMainVideoStream($event)"></stream-component>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
